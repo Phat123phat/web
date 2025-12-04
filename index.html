@@ -3,57 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video</title>
+    <title>Video Tự Động Phát</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body, html {
-            height: 100%;
-            width: 100%;
+        * { margin: 0; padding: 0; }
+        body, html { height: 100%; }
+        video { 
+            width: 100%; 
+            height: 100vh; 
+            object-fit: contain; 
             background: #000;
         }
-        
-        .video-container {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .replay-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <!-- VIDEO CỦA BẠN: Đổi tên video.mp4 thành tên file của bạn -->
-        <video controls autoplay muted playsinline>
-            <source src="assets/video/memory-video.mp4" type="video/mp4">
-            Trình duyệt không hỗ trợ video.
-        </video>
-    </div>
-
+    <video id="myVideo" controls autoplay muted playsinline loop>
+        <source src="assets/video/memory-video.mp4" type="video/mp4">
+    </video>
+    
+    <button class="replay-btn" onclick="replayVideo()">Xem lại</button>
+    
     <script>
-        // Tự động bật âm thanh sau khi video bắt đầu phát
-        const video = document.querySelector('video');
+        const video = document.getElementById('myVideo');
         
-        // Thử tự động phát
-        video.play().catch(e => {
-            console.log("Tự động phát bị chặn");
-        });
+        function autoPlayVideo() {
+            const playPromise = video.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    window.addEventListener('scroll', function playOnScroll() {
+                        video.play();
+                        window.removeEventListener('scroll', playOnScroll);
+                    }, { once: true });
+                    
+                    document.addEventListener('click', function playOnClick() {
+                        video.play();
+                        document.removeEventListener('click', playOnClick);
+                    }, { once: true });
+                });
+            }
+        }
         
-        // Khi người dùng nhấn play, bật âm thanh
+        window.addEventListener('load', autoPlayVideo);
+        document.addEventListener('DOMContentLoaded', autoPlayVideo);
+        
         video.addEventListener('play', function() {
             this.muted = false;
         });
+        
+        function replayVideo() {
+            video.currentTime = 0;
+            video.play();
+        }
+        
+        // Tự động phát lại khi kết thúc
+        video.addEventListener('ended', replayVideo);
     </script>
 </body>
 </html>
