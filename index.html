@@ -3,155 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kỷ Niệm Gia Đình</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;500&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <title>Video Gia Đình</title>
+    <style>
+        /* Reset và styles cơ bản */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Căn giữa video trên màn hình */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        /* Container chứa video */
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        /* Tiêu đề đơn giản */
+        .video-title {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Video responsive */
+        video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #000;
+            display: block;
+        }
+        
+        /* Hướng dẫn nhỏ */
+        .instructions {
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-    <!-- Background particles -->
-    <div class="particles-container" id="particles"></div>
-    
-    <!-- Màn hình mở đầu -->
-    <div class="screen opening-screen" id="openingScreen">
-        <div class="content-container fade-in">
-            <!-- Logo và tên gia đình -->
-            <div class="family-header">
-                <div class="logo-container">
-                    <!-- LOGO GIA ĐÌNH CỦA BẠN: thêm logo vào đây -->
-                    <div class="logo-placeholder" id="logoPlaceholder">
-                        <i class="fas fa-heart logo-icon"></i>
-                        <span class="logo-text">Gia Đình</span>
-                    </div>
-                    <!-- Nếu có logo hình ảnh, sử dụng dòng dưới -->
-                    <!-- <img src="assets/images/family-logo.png" alt="Logo Gia Đình" class="family-logo"> -->
-                </div>
-                <h1 class="family-name">Nhà <span class="highlight">Chúng Ta</span></h1>
-            </div>
-            
-            <div class="title-container">
-                <h2 class="main-title">Khoảnh Khắc Gia Đình</h2>
-                <h3 class="subtitle">Hạnh Phúc Đong Đầy</h3>
-                <div class="heart-divider">
-                    <i class="fas fa-heart"></i>
-                    <i class="fas fa-home"></i>
-                    <i class="fas fa-heart"></i>
-                </div>
-                <p class="quote">"Gia đình là nơi cuộc sống bắt đầu và tình yêu không bao giờ kết thúc."</p>
-            </div>
-            
-            <div class="family-members">
-                <div class="member">
-                    <div class="member-icon"><i class="fas fa-male"></i></div>
-                    <span class="member-name">Bố</span>
-                </div>
-                <div class="member">
-                    <div class="member-icon"><i class="fas fa-female"></i></div>
-                    <span class="member-name">Mẹ</span>
-                </div>
-                <div class="member">
-                    <div class="member-icon"><i class="fas fa-child"></i></div>
-                    <span class="member-name">Con</span>
-                </div>
-                <div class="member">
-                    <div class="member-icon"><i class="fas fa-paw"></i></div>
-                    <span class="member-name">Thú cưng</span>
-                </div>
-            </div>
-            
-            <div class="floating-elements">
-                <i class="fas fa-heart floating-element" style="--i:1;"></i>
-                <i class="fas fa-home floating-element" style="--i:2;"></i>
-                <i class="fas fa-star floating-element" style="--i:3;"></i>
-                <i class="fas fa-heart floating-element" style="--i:4;"></i>
-                <i class="fas fa-home floating-element" style="--i:5;"></i>
-            </div>
-            
-            <div class="button-container">
-                <button class="btn-view-memories" id="viewMemoriesBtn">
-                    <span class="btn-text">Xem Kỷ Niệm</span>
-                    <i class="fas fa-play-circle btn-icon"></i>
-                </button>
-                <div class="auto-play-notice">
-                    <p>Tự động phát sau <span id="countdown">10</span> giây...</p>
-                </div>
-            </div>
-            
-            <div class="instructions">
-                <p><i class="fas fa-volume-up"></i> Hãy bật âm thanh để trải nghiệm trọn vẹn</p>
-                <p><i class="fas fa-users"></i> Cùng nhau xem và ôn lại kỷ niệm đẹp</p>
-            </div>
-        </div>
+    <div class="video-container">
+        <h1 class="video-title">Video Gia Đình</h1>
+        
+        <!-- VIDEO CỦA BẠN: thay đổi src này để trỏ đến video của bạn -->
+        <video controls autoplay muted playsinline>
+            <source src="assets/video/memory-video.mp4" type="video/mp4">
+            Trình duyệt của bạn không hỗ trợ video. 
+            Vui lòng tải xuống video <a href="assets/video/memory-video.mp4">tại đây</a>.
+        </video>
+        
+        <p class="instructions">Nhấn nút Play để bắt đầu xem video</p>
     </div>
-    
-    <!-- Màn hình video -->
-    <div class="screen video-screen hidden" id="videoScreen">
-        <div class="video-container">
-            <div class="video-header">
-                <div class="family-header-small">
-                    <div class="logo-container-small">
-                        <i class="fas fa-heart"></i>
-                        <span class="logo-text-small">Gia Đình Chúng Ta</span>
-                    </div>
-                </div>
-                <h2 class="video-title">Kỷ Niệm Gia Đình</h2>
-                <p class="video-subtitle">Những khoảnh khắc hạnh phúc bên nhau</p>
-            </div>
+
+    <script>
+        // Script đơn giản - tự động bật âm thanh sau khi video bắt đầu phát
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('video');
             
-            <div class="video-wrapper">
-                <video id="memoryVideo" controls>
-                    <source src="assets/video/memory-video.mp4" type="video/mp4">
-                    <p>Trình duyệt của bạn không hỗ trợ video. Vui lòng tải xuống video <a href="assets/video/memory-video.mp4">tại đây</a>.</p>
-                </video>
-                
-                <div class="video-controls">
-                    <button class="video-btn" id="playPauseBtn">
-                        <i class="fas fa-play"></i> <span>Phát</span>
-                    </button>
-                    <button class="video-btn" id="replayBtn">
-                        <i class="fas fa-redo"></i> <span>Xem lại</span>
-                    </button>
-                    <button class="video-btn" id="backBtn">
-                        <i class="fas fa-home"></i> <span>Về trang chủ</span>
-                    </button>
-                </div>
-            </div>
+            // Thử tự động phát video
+            video.play().then(() => {
+                console.log("Video đang tự động phát");
+                // Tự động bật âm thanh sau khi bắt đầu phát
+                setTimeout(() => {
+                    video.muted = false;
+                }, 1000);
+            }).catch(error => {
+                console.log("Tự động phát bị chặn, cần nhấn play thủ công");
+            });
             
-            <div class="memory-quote">
-                <p><i class="fas fa-quote-left"></i> Gia đình là điều quan trọng nhất trên thế gian này. Dù có đi đâu, về đâu thì gia đình vẫn là nơi để trở về. <i class="fas fa-quote-right"></i></p>
-            </div>
-            
-            <div class="family-values">
-                <div class="value">
-                    <i class="fas fa-laugh-beam"></i>
-                    <h4>Hạnh Phúc</h4>
-                </div>
-                <div class="value">
-                    <i class="fas fa-hands-helping"></i>
-                    <h4>Yêu Thương</h4>
-                </div>
-                <div class="value">
-                    <i class="fas fa-hand-holding-heart"></i>
-                    <h4>Sẻ Chia</h4>
-                </div>
-                <div class="value">
-                    <i class="fas fa-shield-alt"></i>
-                    <h4>Bảo Vệ</h4>
-                </div>
-            </div>
-            
-            <div class="video-footer">
-                <p>Made with <i class="fas fa-heart heartbeat"></i> for our family</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Hiệu ứng chuyển cảnh -->
-    <div class="transition-overlay" id="transitionOverlay"></div>
-    
-    <script src="script.js"></script>
+            // Bật âm thanh khi người dùng nhấn play
+            video.addEventListener('play', function() {
+                this.muted = false;
+            });
+        });
+    </script>
 </body>
 </html>
