@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Tự Động Phát</title>
+    <title>Video YouTube Tự Động Phát</title>
     <style>
         * { margin: 0; padding: 0; }
         body, html { height: 100%; }
-        video { 
+        .video-container { 
             width: 100%; 
             height: 100vh; 
-            object-fit: contain; 
             background: #000;
+            position: relative;
+        }
+        #youtube-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .replay-btn {
             position: fixed;
@@ -25,50 +30,136 @@
             cursor: pointer;
             z-index: 100;
         }
+        .volume-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
-    <video id="myVideo" controls autoplay muted playsinline loop>
-        <source src="assets/video/memory-video.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+        <!-- Video ID: 9liVxr6OLV4 -->
+        <iframe 
+            id="youtube-player"
+            src="https://www.youtube.com/embed/9liVxr6OLV4?autoplay=1&mute=1&playsinline=1&controls=1&loop=1&playlist=9liVxr6OLV4&rel=0&modestbranding=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
     
     <button class="replay-btn" onclick="replayVideo()">Xem lại</button>
+    <button class="volume-btn" onclick="toggleMute()">Bật/Tắt Âm thanh</button>
     
     <script>
-        const video = document.getElementById('myVideo');
+        const videoId = '9liVxr6OLV4';
+        let player;
+        let isMuted = true;
         
-        function autoPlayVideo() {
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    window.addEventListener('scroll', function playOnScroll() {
-                        video.play();
-                        window.removeEventListener('scroll', playOnScroll);
-                    }, { once: true });
-                    
-                    document.addEventListener('click', function playOnClick() {
-                        video.play();
-                        document.removeEventListener('click', playOnClick);
-                    }, { once: true });
-                });
+        // Tải YouTube IFrame API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        
+        // Hàm này được gọi tự động bởi YouTube API
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'playsinline': 1,
+                    'controls': 1,
+                    'loop': 1,
+                    'playlist': videoId,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+        
+        function onPlayerReady(event) {
+            console.log('Player đã sẵn sàng');
+            event.target.playVideo();
+        }
+        
+        function onPlayerStateChange(event) {
+            // Khi video kết thúc, tự động phát lại
+            if (event.data === YT.PlayerState.ENDED) {
+                player.playVideo();
             }
         }
         
-        window.addEventListener('load', autoPlayVideo);
-        document.addEventListener('DOMContentLoaded', autoPlayVideo);
-        
-        video.addEventListener('play', function() {
-            this.muted = false;
-        });
-        
         function replayVideo() {
-            video.currentTime = 0;
-            video.play();
+            if (player && player.playVideo) {
+                player.seekTo(0);
+                player.playVideo();
+            }
         }
         
-        // Tự động phát lại khi kết thúc
-        video.addEventListener('ended', replayVideo);
+        function toggleMute() {
+            if (player) {
+                if (isMuted) {
+                    player.unMute();
+                    isMuted = false;
+                    document.querySelector('.volume-btn').textContent = 'Tắt tiếng';
+                } else {
+                    player.mute();
+                    isMuted = true;
+                    document.querySelector('.volume-btn').textContent = 'Bật âm thanh';
+                }
+            }
+        }
+        
+        // Thử tự động phát khi trang đã tải
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (player && player.playVideo) {
+                    player.playVideo().catch(error => {
+                        console.log('Tự động phát bị chặn, cần tương tác người dùng');
+                        
+                        // Hiển thị thông báo
+                        const msg = document.createElement('div');
+                        msg.style.position = 'fixed';
+                        msg.style.top = '50%';
+                        msg.style.left = '50%';
+                        msg.style.transform = 'translate(-50%, -50%)';
+                        msg.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                        msg.style.color = 'white';
+                        msg.style.padding = '20px';
+                        msg.style.borderRadius = '10px';
+                        msg.style.zIndex = '1000';
+                        msg.textContent = 'Nhấn vào màn hình để phát video';
+                        document.body.appendChild(msg);
+                        
+                        // Xóa thông báo khi click
+                        document.addEventListener('click', function initPlay() {
+                            player.playVideo();
+                            document.body.removeChild(msg);
+                            document.removeEventListener('click', initPlay);
+                        }, { once: true });
+                    });
+                }
+            }, 1000);
+        });
+        
+        // Cập nhật text nút volume ban đầu
+        window.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.volume-btn').textContent = 'Bật âm thanh';
+        });
     </script>
 </body>
 </html>
